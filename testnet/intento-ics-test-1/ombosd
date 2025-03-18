@@ -1,0 +1,22 @@
+config_toml="$HOME./intento/config/config.toml"
+client_toml="$HOME./intento/config/client.toml"
+app_toml="$HOME./intento/config/app.toml"
+genesis_json="$HOME./intento/config/genesis.json"
+
+ATOM="ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2"
+CHAINID="intento-ics-test-1"
+
+sed -i -E "s|cors_allowed_origins = \[\]|cors_allowed_origins = [\"*\"]|g" $config_toml
+
+sed -i -E "s|127.0.0.1|0.0.0.0|g" $config_toml
+sed -i -E "s|seeds = \".*\"|seeds = \"$SEED\"|g" $config_toml
+sed -i -E "s|persistent_peers = \".*\"|persistent_peers = \"$PEERS\"|g" $config_toml
+
+sed -i -E "s|minimum-gas-prices = \".*\"|minimum-gas-prices = \"0.001uinto,0.001$ATOM\"|g" $app_toml
+sed -i -E '/\[api\]/,/^enable = .*$/ s/^enable = .*$/enable = true/' $app_toml
+sed -i -E 's|swagger = .*|swagger = true|g' $app_toml
+sed -i -E "s|localhost|0.0.0.0|g" $app_toml
+sed -i -E 's|unsafe-cors = .*|unsafe-cors = true|g' $app_toml
+
+sed -i -E "s|chain-id = \".*\"|chain-id = \"$CHAINID\"|g" $client_toml
+sed -i -E "s|keyring-backend = \"os\"|keyring-backend = \"test\"|g" $client_toml 
